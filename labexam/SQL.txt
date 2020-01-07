@@ -1,0 +1,158 @@
+Data and Application Final Lab Exam:
+NAME: Giri Prasath
+ROLLNO: 2018111006
+
+[EASY]
+(A).
+SQL stmt:
+SELECT MIN(Salary),MAX(Salary),AVG(Salary) from EMPLOYEE;
+	
+Result:
++-------------+-------------+--------------+
+| MIN(Salary) | MAX(Salary) | AVG(Salary)  |
++-------------+-------------+--------------+
+|    25000.00 |    55000.00 | 35125.000000 |
++-------------+-------------+--------------+
+
+Rationale: 
+
+(1). MIN,MAX,AVG are the functions for finding minimum,maximum and average respectively.
+(2). In addition i gave FROM EMPLOYEE as Salary is present in EMPLOYEE table with all employees.
+
+(B).
+SQL stmt:
+SELECT SUM(Hours) FROM WORKS_ON WHERE Essn = '987654321';
+
+Result:
++------------+
+| SUM(Hours) |
++------------+
+|       35.0 |
++------------+
+
+Rationale:
+(1). SUM is the function for finding sum of a given column.
+(2). WHERE Essn = "987654321" gives the conditon to only take the rows with Essn as 987654321 in the table WORKS_ON.
+
+(C).
+SQL stmt:
+SELECT Fname,Minit,Lname FROM EMPLOYEE WHERE Dno=(SELECT Dnumber FROM DEPARTMENT WHERE Dname = "Administration");
+
+Result:
++----------+-------+---------+
+| Fname    | Minit | Lname   |
++----------+-------+---------+
+| Jennifer | S     | Wallace |
+| Ahmad    | V     | Jabbar  |
+| Alicia   | J     | Zelaya  |
++----------+-------+---------+
+
+Rationale:
+
+(1). EMPLOYEE contains the relation between Name and Dno and table DEPARTMENT contains the relation between Department name and Department No
+(2). I print the names of the employee from table EMPLOYEE whose Dno = the Dnumber from the table DEPARTMENT which has the Dname as Administration.
+
+
+(D).
+SQL stmt:
+SELECT Fname,Minit,Lname FROM EMPLOYEE ORDER BY Bdate DESC;
+
+Result:
++----------+-------+---------+
+| Fname    | Minit | Lname   |
++----------+-------+---------+
+| Joyce    | A     | English |
+| Ahmad    | V     | Jabbar  |
+| Alicia   | J     | Zelaya  |
+| John     | B     | Smith   |
+| Ramesh   | K     | Narayan |
+| Franklin | T     | Wong    |
+| Jennifer | S     | Wallace |
+| James    | E     | Borg    |
++----------+-------+---------+
+
+Rationale:
+(1). Age is inversely proportional on BDate thus we order the employees in the Descending order of Bday to order them in ascending order of Age.
+
+
+(E).
+SQL stmt:
+SELECT Fname,Minit,Lname FROM EMPLOYEE WHERE Ssn NOT IN (SELECT Essn FROM DEPENDENT);
+
+Result:
++--------+-------+---------+
+| Fname  | Minit | Lname   |
++--------+-------+---------+
+| Joyce  | A     | English |
+| Ramesh | K     | Narayan |
+| James  | E     | Borg    |
+| Ahmad  | V     | Jabbar  |
+| Alicia | J     | Zelaya  |
++--------+-------+---------+
+
+Rationale:
+(1). I print the name of the employees whose Ssn in not present in the table DEPENDENT which contains the info of the employee's dependent.
+
+[MEDIUM]
+
+SQL stmt:
+SELECT Fname,Minit,Lname,SUM(Hours) FROM EMPLOYEE,WORKS_ON,PROJECT WHERE Ssn = Essn AND Pno=Pnumber AND PName LIKE "Product%" GROUP BY Ssn;
+
+Result:
++----------+-------+---------+------------+
+| Fname    | Minit | Lname   | SUM(Hours) |
++----------+-------+---------+------------+
+| John     | B     | Smith   |       40.0 |
+| Joyce    | A     | English |       40.0 |
+| Franklin | T     | Wong    |       20.0 |
+| Ramesh   | K     | Narayan |       40.0 |
++----------+-------+---------+------------+
+
+Rationale:"
+(1). We use the 3 tables EMPLOYEE , WORKS_ON and PROJECT as we find the employees whose Ssn match with the Pno whose name is like "Project%" (where % depicts any string after Project).
+(2). We group by Ssn so that we can sum up the Hours worked for every employee present in the table.
+
+[HARD]
+
+SQL stmts:
+
+1. DELETE FROM WORKS_ON WHERE Pno = (SELECT Pnumber FROM PROJECT WHERE Pname = "Newbenefits");
+
+2. DELETE FROM PROJECT WHERE Pname ="Newbenefits";
+
+Result:
+
+WORKS_ON:
++-----------+-----+-------+
+| Essn      | Pno | Hours |
++-----------+-----+-------+
+| 123456789 |   1 |  32.5 |
+| 123456789 |   2 |   7.5 |
+| 333445555 |   2 |  10.0 |
+| 333445555 |   3 |  10.0 |
+| 333445555 |  10 |  10.0 |
+| 333445555 |  20 |  10.0 |
+| 453453453 |   1 |  20.0 |
+| 453453453 |   2 |  20.0 |
+| 666884444 |   3 |  40.0 |
+| 888665555 |  20 |  NULL |
+| 987654321 |  20 |  15.0 |
+| 987987987 |  10 |  35.0 |
+| 999887777 |  10 |  10.0 |
++-----------+-----+-------+
+
+PROJECT:
++-----------------+---------+-----------+------+
+| Pname           | Pnumber | Plocation | Dnum |
++-----------------+---------+-----------+------+
+| ProductX        |       1 | Bellaire  |    5 |
+| ProductY        |       2 | Sugarland |    5 |
+| ProductZ        |       3 | Houston   |    5 |
+| Computerization |      10 | Stafford  |    4 |
+| Reorganization  |      20 | Houston   |    1 |
++-----------------+---------+-----------+------+
+
+Rationale:
+(1). The project "Newbenefits" affects two table PROJECT and WORKS_ON which both have the Project number.
+(2). We delete from WORKS_ON first as we need to check the Pno for which Pname is Newbenefits in the table PROJECT (thus we dont delete from PROJECT first).
+(3). After the table PROJECT is no longer required in our process we delete the row which has the Pname as "Newbenefits".

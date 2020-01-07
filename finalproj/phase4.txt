@@ -1,0 +1,131 @@
+
+I. DELETION:
+
+
+1. Delete_Medicine(Medicine_ID):
+	delete from Medicine as A where A.Medicine_ID = 1;
+	delete from Prescription where Medicine_ID = 1;
+
+2. Discharge_Patient(Patient_ID):
+	delete from Patient_1 where Patient_ID =1;
+	delete from Patient_2 where Patient_ID =1;
+	delete from Prescription where Patient_ID = 1;
+	delete from Patient_Attender where Patient_ID = 1;
+	delete from Illness where Patient_ID = 1;
+	delete from Bill where Treatment_ID = (select Treatment_ID from Treatment where Patient_ID =1);
+	delete from Treatment where Patient_ID = 1;
+	
+3. Fire_Doctor(Doctor_ID):
+	check if NULL:
+		select Patient_ID from Patient_1 where Doctor_ID = 1;
+
+	if NULL:
+		delete from Doctor_1 where Doctor_ID =1;
+		delete from Doctor_2 where Doctor_ID =1;
+		delete from Doctor_3 where Doctor_ID =1;
+
+	else:
+		print ("Patient present for doctor cant fire doctor");
+
+4. Fire_Nurse(Nurse_ID):
+	delete from Nurse_1 where Nurse_ID =1;
+	delete from Nurse_2 where Nurse_ID =1;
+	delete from Nurse_3 where Nurse_ID =1;
+
+
+II. INSERTION:
+
+1. Admit_Patient(int ID,sex,F.name,M.name,L.name,Address,Phno,DOB,
+Disease_ID):
+	int age = calculate_age(DOB);
+	int RId = select max(room_ID) from Rooms + 1;
+	int TId = select max(Treatment_ID) from Treatment + 1;
+	insert into Rooms values (RId,rand(cost)%1000+500,rand(type)%5)
+	int DId = rand%(row_count doctor); 
+	insert into Patient_1 values(ID,RId,DId,Address,sex,Phno,age,DOB,"ALIVE");
+	//condition add
+	insert into Patient_2 values(F.name,M.name,L.name);
+	insert into Illness values(Disease_ID,ID);
+	insert into Treatment values (TId,ID,rand(cost)%1000+500,rand(time)+2%10);
+	insert into Medicine values ("0",PId);
+	New_Bill(ID,DId,0,RId,TId); //wait
+	
+2. Hire_Nurse(ID,F.name,M.name,L.name,sex,Phno,Qual):
+	int RId = rand(row_count Rooms)+1;
+	insert into Nurse_1 values(ID,RId,sex,Phno);
+	insert into Nurse_2 values(ID,F.name,M.name,L.name)
+	
+	while loop till NULL:
+		qualification = Qual[i];
+		insert into Nurse_3 values(ID,qualification)
+
+3. Hire_Doctor(ID,F.name,M.name,L.name,sex,Phno,Class,Qual)
+	insert into Doctor_1 values(ID,sex,Phno,Class)
+	insert into Doctor_2 values(ID,F.name,M.name,L.name) 
+
+	while loop till NULL:
+		qualification = Qual[i];
+		insert into Nurse_3 values(ID,qualification)
+
+4. Add_new_medicine(ID,Expiry_date,cost)
+	insert into Medicine(ID,cost,Expiry_date)
+
+
+III. UPDATE:
+
+1. Update_PatientCondition(PId,Cond):
+	update Patient_1 SET Condition=Cond WHERE Patient_ID = PId;
+
+2. Update_PatientMedicine(PId,From_Medicine,To_Medicine):
+	if(To_Medicine!=0 && From_Medicine!=0)
+		update Prescription SET Medicine_ID = To_Medicine WHERE Patient_ID = PId AND Medicine_ID = From_Medicine;
+		TId = select Treatment_ID from Treatment where Patient_ID = PId;
+		update Bill SET Medicine_ID = To_Medicine WHERE Treatment_ID = TId AND Medicine_ID = From_Medicine;
+	else if (To_Medicine==0 && From_Medicine!=0)
+		delete from Prescription WHERE Patient_ID = PId AND Medicine_ID = From_Medicine;
+		TId = select Treatment_ID from Treatment where Patient_ID = PId;
+		delete from Bill WHERE Treatment_ID = TId AND Medicine_ID = From_Medicine;
+	else if (To_Medicine!=0 && From_Medicine==0)
+		insert into Prescription values(To_Medicine,PId);
+		TId = select Treatment_ID from Treatment where Patient_ID = PId;
+		int DId = select Doctor_ID from Patient_1 where Patient_ID = PId;
+		int RId = select Room_ID from Patient_1 where Patient_ID = PId;
+		insert into Bill values(DId,To_medicine,RId,TId);
+	else
+		error benchod;
+
+IV. REPORT:
+
+1. Create_Discharge_Summary (PId):
+	Patient_Name:
+		select * from Patient_2 where Patient_ID = PId;
+	Patient Details:
+		select * from Patient_1 where Patient_ID = PId;
+	Doctor Name:
+		select * from Doctor_2 where Doctor_ID = (select Doctor_ID from Patient_1 where Patient_ID = PId);
+	Prescription:
+		select * from Prescription where Patient_ID = PId;
+	TId = select Treatment_ID from Treatment where Patient_ID = PId;
+
+2. Bill(PId):
+	Doctor Bill:
+		print 1000;
+	Medicine:
+		TId = select Treatment_ID from Treatment where Patient_ID = PId;
+		select sum(select cost where Medicine_ID in (select Medicine_ID from Bill where Treatment_ID = TId));
+	Room Bill:
+		select Room_ID from Patient_1 where Patient_ID = PId;
+	total :
+		sum of all 3;
+
+
+Other Functions:
+
+1. New_Bill(PId,DId,MId,RId,TId)
+	insert into Bill values (DId,MId,RId,TId);
+
+
+to do:
+1. class split
+2. patient condition
+3. 
